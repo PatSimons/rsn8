@@ -9,7 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 window.Webflow ||= [];
 window.Webflow.push(() => {
-  //// Page Transition
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Page Transition
   // Constant for delay time (in milliseconds)
   const delayTime = 1000; // 1 second
 
@@ -34,9 +34,7 @@ window.Webflow.push(() => {
     link.addEventListener('click', handlePageTransition);
   });
 
-  //// END: Page Transition ////////////////////////////////////////////////////////////////////////////
-
-  //// Scrolltriggers
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Scrolltriggers
   // Get all parent elements with the attribute 'parent'
   const parents = document.querySelectorAll('[cs-el="stParent"]');
 
@@ -64,14 +62,12 @@ window.Webflow.push(() => {
   });
   ////
 
-  //// Nav Toggle Visibility ////////////////////////////////////////////////////////////////////////////
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Nav Toggle Visibility
   const navComponent = document.querySelector('[cs-el="navComponent"]');
   const navTrigger = document.querySelector('[cs-el="navTrigger"]');
-  gsap.set(navComponent, { opacity: 0 });
+  //gsap.set(navComponent, { opacity: 0 });
 
-  //// END: Nav Toggle Visibility ////////////////////////////////////////////////////////////////////////////
-
-  //// Split Types ////////////////////////////////////////////////////////////////////////////
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Split Types
   const splitTypes = gsap.utils.toArray<HTMLElement>('[cs-el="splitText-w"]');
   if (splitTypes.length > 0) {
     gsap.from(splitTypes, {
@@ -88,10 +84,10 @@ window.Webflow.push(() => {
         gsap.from(splitType.words, {
           opacity: 0,
           y: '-1rem',
-          duration: 3,
+          duration: 4,
           scale: 1.1,
           ease: 'back.out',
-          stagger: 0.25,
+          stagger: 0.2,
         });
 
         gsap.fromTo(
@@ -119,134 +115,7 @@ window.Webflow.push(() => {
       }); // END: forEach
     } // END: if
   }
-  //// END: Split Types ////////////////////////////////////////////////////////////////////////////
-
-  //// Set SVG Waves ////////////////////////////////////////////////////////////////////////////
-
-  interface WaveOptions {
-    numPoints: number;
-    minHeight: number;
-    maxHeight: number;
-    minDuration: number;
-    maxDuration: number;
-    tl?: gsap.core.Timeline;
-    points?: { x: number; y: number }[];
-  }
-
-  // Set SVG Waves
-  let aniWave = true;
-  const waves = document.querySelectorAll<HTMLElement>('[cs-el="waveWrap"]');
-  const haveIt: HTMLElement[] = [];
-
-  waves.forEach((wave) => {
-    if (wave.classList.contains('static')) {
-      aniWave = false;
-    } else {
-      aniWave = true;
-    }
-
-    const waveOptions: WaveOptions = {
-      numPoints: random(3, 4),
-      minHeight: 25,
-      maxHeight: 300,
-      minDuration: 6,
-      maxDuration: 7,
-    };
-
-    const waveObject = createWave(wave, waveOptions);
-
-    if (aniWave && waveObject.tl) {
-      gsap.to(waveObject.tl, { duration: 0.3, timeScale: 1, onStart: () => waveObject.tl?.play() });
-    }
-
-    function createWave(el: HTMLElement, options: WaveOptions): WaveOptions {
-      const points: { x: number; y: number }[] = [];
-      const path = el.querySelector<SVGPathElement>('.p');
-
-      if (aniWave) {
-        options.tl = gsap.timeline({ onUpdate: update, paused: true });
-      }
-
-      points.push({ x: 1440, y: 320 });
-      points.push({ x: 0, y: 320 });
-
-      for (let i = 0; i < options.numPoints; i++) {
-        const slice = 1440 / options.numPoints;
-        const duration = random(options.minDuration, options.maxDuration);
-        const point = { x: slice * i, y: random(options.minHeight, options.maxHeight) };
-
-        if (aniWave && options.tl) {
-          const tween = gsap.to(point, {
-            duration,
-            x: slice * i,
-            y: random(options.minHeight, options.maxHeight),
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-          });
-
-          options.tl.add(tween, -random(duration));
-        }
-
-        points.push(point);
-      }
-
-      options.points = points;
-
-      if (!aniWave) {
-        update();
-      }
-
-      function update() {
-        if (path && options.points) {
-          path.setAttribute('d', cardinal(options.points, true, 1.3));
-        }
-      }
-
-      return options;
-    }
-  });
-
-  function random(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  function cardinal(data: { x: number; y: number }[], closed: boolean, tension: number): string {
-    if (data.length < 1) return 'M0 0';
-    if (tension == null) tension = 1;
-    else tension = +tension;
-
-    const size = data.length - (closed ? 0 : 1);
-    let path = 'M' + data[0].x + ' ' + data[0].y + ' C';
-
-    for (let i = 0; i < size; i++) {
-      let p0, p1, p2, p3;
-
-      if (closed) {
-        p0 = data[(i - 1 + size) % size];
-        p1 = data[i];
-        p2 = data[(i + 1) % size];
-        p3 = data[(i + 2) % size];
-      } else {
-        p0 = i === 0 ? data[0] : data[i - 1]; // If first point, copy next point
-        p1 = data[i];
-        p2 = data[i + 1] || p1; // If last point, copy previous point
-        p3 = data[i + 2] || p2; // If last point, copy previous point
-      }
-
-      const x1 = p1.x + ((p2.x - p0.x) / 6) * tension;
-      const y1 = p1.y + ((p2.y - p0.y) / 6) * tension;
-
-      const x2 = p2.x - ((p3.x - p1.x) / 6) * tension;
-      const y2 = p2.y - ((p3.y - p1.y) / 6) * tension;
-
-      path += ' ' + x1 + ' ' + y1 + ' ' + x2 + ' ' + y2 + ' ' + p2.x + ' ' + p2.y;
-    }
-
-    return closed ? path + 'z' : path;
-  }
-
-  //// END: Set SVG Waves ////////////////////////////////////////////////////////////////////////////
+  //----- END: Split Types -----------------------------------------------------------------//
 
   const color1 = '#abe8ff'; // Blue-ish
   const color2 = '#7ecba9'; // Green-ish
@@ -254,7 +123,6 @@ window.Webflow.push(() => {
 
   //initSliders();
   //initFaqs();
-  console.log('local');
 
   // const gradientBg = document.querySelector('[cs-el="gradientBg"]');
   // const gradientBgTrigger = document.querySelector('[cs-el="gradientTrigger"]');
@@ -280,62 +148,6 @@ window.Webflow.push(() => {
   //       ', ' +
   //       color3 +
   //       ')',
-  //   },
-  //   {
-  //     background:
-  //       'radial-gradient(circle farthest-corner at 50% 50%,' +
-  //       //'radial-gradient(circle farthest-corner at 0% 100%,' +
-  //       color2 +
-  //       ', ' +
-  //       color3 +
-  //       ', ' +
-  //       color1 +
-  //       ')',
   //   }
   // );
-
-  // // Review Template - Set Nav
-  // const postList = document.querySelector<HTMLElement>('[cs-el="postList"]');
-  // if (postList) {
-  //   const current = postList?.querySelector('.w--current');
-  //   const nextElement = current?.parentElement?.nextElementSibling;
-  //   const previousElement = current?.parentElement?.previousElementSibling;
-  //   // Get the 'href' attribute of the <a> element from the next sibling
-  //   const nextSrc = nextElement?.querySelector('a')?.getAttribute('href');
-  //   // Get the 'href' attribute of the <a> element from the previous sibling
-  //   const previousSrc = previousElement?.querySelector('a')?.getAttribute('href');
-  //   // Select the next and previous buttons
-  //   const nextButton = document.querySelector<HTMLAnchorElement>('[cs-el="nextPost"]');
-  //   const previousButton = document.querySelector<HTMLAnchorElement>('[cs-el="previousPost"]');
-  //   // Set the 'href' attribute of the next and previous buttons accordingly
-  //   if (nextButton && nextSrc) {
-  //     nextButton.href = nextSrc;
-  //   } else {
-  //     nextButton?.classList.add('is-muted');
-  //   }
-  //   if (previousButton && previousSrc) {
-  //     previousButton.href = previousSrc;
-  //   } else {
-  //     previousButton?.classList.add('is-muted');
-  //   }
-  // }
-  // // Reviews - Set Stars
-  // const reviewStars = document.querySelectorAll<HTMLElement>('[cs-el="reviewStars"]');
-  // if (reviewStars.length > 0) {
-  //   reviewStars.forEach((el) => {
-  //     const maxRating = 5;
-  //     const rating = el?.getAttribute('rating');
-  //     if (rating !== null) {
-  //       for (let i = 0; i < maxRating; i++) {
-  //         const childElement = el.children[i] as HTMLElement;
-  //         const ratingValue = parseInt(rating, 10);
-  //         if (i < ratingValue) {
-  //           childElement.classList.add('is-active');
-  //         } else {
-  //           childElement.classList.remove('is-active');
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
 }); // End: Webflow Push
