@@ -1,7 +1,7 @@
-import { greetUser } from '$utils/greet';
+import './global';
+
+//import { gsap } from './global';
+//import { ScrollTrigger } from './global';
 
 window.Webflow ||= [];
-window.Webflow.push(() => {
-  const name = 'John Doe';
-  greetUser(name);
-});
+window.Webflow.push(() => {});

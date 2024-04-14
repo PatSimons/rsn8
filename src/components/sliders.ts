@@ -95,7 +95,7 @@ function initSlider(slider: HTMLElement) {
   let prev: HTMLElement | null;
   let isFirstSlide = false;
   let isLastSlide = false;
-  const playDuration = 3000;
+  const playDuration = 6000;
   const tl_slideIn: gsap.core.Timeline = gsap.timeline({ paused: true });
   const tl_slideOut: gsap.core.Timeline = gsap.timeline({ paused: true });
   let initialSlide = true;

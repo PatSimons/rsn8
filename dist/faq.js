@@ -7924,6 +7924,51 @@
       });
     }
   });
+
+  // src/components/faqs.ts
+  function initFaqs() {
+    const faqs = gsapWithCSS.utils.toArray('[cs-el="faq"]');
+    let currentItem = null;
+    if (faqs.length > 0) {
+      faqs.forEach((faq, i) => {
+        const faqAnswer = faq.querySelector('[cs-el="faqAnswer"]');
+        const openButton = faq.querySelector('[cs-el="faqQuestion"]');
+        const faqIcon = faq.querySelector('[cs-el="faqIcon"]');
+        if (!faqAnswer)
+          return;
+        gsapWithCSS.set(faqAnswer, { height: 0, opacity: 0 });
+        const tl_openFaq = gsapWithCSS.timeline({ paused: true });
+        tl_openFaq.to(faqAnswer, {
+          height: "auto",
+          opacity: 1,
+          duration: 0.75
+        });
+        tl_openFaq.to(faq, { paddingTop: "1rem" }, "<");
+        tl_openFaq.to(faqAnswer, { marginBottom: "2rem" }, "<");
+        tl_openFaq.to(faqIcon, { rotate: "45" }, "<");
+        faq._accordionAnimation = tl_openFaq;
+        faq?.addEventListener("click", () => {
+          if (currentItem !== null) {
+            faqs[currentItem].classList.toggle("active");
+            if (currentItem === i) {
+              currentItem = null;
+              return tl_openFaq.timeScale(1).reverse();
+            }
+            faqs[currentItem]._accordionAnimation.reverse();
+          }
+          faq.classList.toggle("active");
+          tl_openFaq.timeScale(1).play();
+          currentItem = i;
+        });
+      });
+    }
+  }
+
+  // src/faq.ts
+  window.Webflow ||= [];
+  window.Webflow.push(() => {
+    initFaqs();
+  });
 })();
 /*! Bundled license information:
 
@@ -7971,4 +8016,4 @@ gsap/ScrollTrigger.js:
    * @author: Jack Doyle, jack@greensock.com
   *)
 */
-//# sourceMappingURL=global.js.map
+//# sourceMappingURL=faq.js.map

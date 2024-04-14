@@ -7924,6 +7924,11 @@
       });
     }
   });
+
+  // src/index.ts
+  window.Webflow ||= [];
+  window.Webflow.push(() => {
+  });
 })();
 /*! Bundled license information:
 
@@ -7971,4 +7976,4 @@ gsap/ScrollTrigger.js:
    * @author: Jack Doyle, jack@greensock.com
   *)
 */
-//# sourceMappingURL=global.js.map
+//# sourceMappingURL=index.js.map
