@@ -7783,20 +7783,20 @@
   window.Webflow ||= [];
   window.Webflow.push(() => {
     const mouseTrail = document.querySelector('[cs-el="mouseTrail"]');
-    if (!mouseTrail)
-      return;
-    gsapWithCSS.set(mouseTrail, { width: "150rem" });
-    gsapWithCSS.to(mouseTrail, { width: "50rem", autoAlpha: 1, duration: 2, delay: 0 });
-    window.onpointermove = (event) => {
-      const { clientX, clientY } = event;
-      mouseTrail.animate(
-        {
-          left: `${clientX}px`,
-          top: `${clientY}px`
-        },
-        { duration: 3e3, fill: "forwards" }
-      );
-    };
+    if (mouseTrail) {
+      gsapWithCSS.set(mouseTrail, { width: "150rem" });
+      gsapWithCSS.to(mouseTrail, { width: "50rem", autoAlpha: 1, duration: 2, delay: 0 });
+      window.onpointermove = (event) => {
+        const { clientX, clientY } = event;
+        mouseTrail.animate(
+          {
+            left: `${clientX}px`,
+            top: `${clientY}px`
+          },
+          { duration: 3e3, fill: "forwards" }
+        );
+      };
+    }
     initSliders();
     const delayTime = 500;
     const mainWrapper = document.querySelector(".main-wrapper");

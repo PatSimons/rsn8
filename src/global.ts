@@ -14,21 +14,31 @@ window.Webflow ||= [];
 window.Webflow.push(() => {
   //_______________________________________________________________________________________________________ Mouse Trail
   const mouseTrail = document.querySelector<HTMLElement>('[cs-el="mouseTrail"]');
-  if (!mouseTrail) return;
-  gsap.set(mouseTrail, { width: '150rem' });
-  gsap.to(mouseTrail, { width: '50rem', autoAlpha: 1, duration: 2, delay: 0 });
-  window.onpointermove = (event) => {
-    const { clientX, clientY } = event;
+  if (mouseTrail) {
+    gsap.set(mouseTrail, { width: '150rem' });
+    gsap.to(mouseTrail, { width: '50rem', autoAlpha: 1, duration: 2, delay: 0 });
+    window.onpointermove = (event) => {
+      const { clientX, clientY } = event;
 
-    mouseTrail.animate(
-      {
-        left: `${clientX}px`,
-        top: `${clientY}px`,
-      },
-      { duration: 3000, fill: 'forwards' }
-    );
-  };
+      mouseTrail.animate(
+        {
+          left: `${clientX}px`,
+          top: `${clientY}px`,
+        },
+        { duration: 3000, fill: 'forwards' }
+      );
 
+      // // Define the random position wiggle animation
+      // gsap.to(mouseTrail, {
+      //   x: () => Math.random() * 2 - 1, // Random x-axis movement within a range of -5 to 5
+      //   y: () => Math.random() * 2 - 1, // Random y-axis movement within a range of -5 to 5
+      //   duration: 0.5, // Adjust the duration of each cycle
+      //   repeat: -1, // Repeat the animation indefinitely
+      //   yoyo: true, // Yoyo back and forth for a smooth effect
+      //   ease: 'power1.inOut', // Adjust the easing for different motion effects
+      // });
+    };
+  }
   //_______________________________________________________________________________________________________ Init Modal
   //initModal();
 
