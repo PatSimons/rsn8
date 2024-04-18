@@ -16,7 +16,7 @@ window.Webflow.push(() => {
   const mouseTrail = document.querySelector<HTMLElement>('[cs-el="mouseTrail"]');
   if (mouseTrail) {
     gsap.set(mouseTrail, { width: '150rem' });
-    gsap.to(mouseTrail, { width: '50rem', autoAlpha: 1, duration: 2, delay: 0 });
+    gsap.to(mouseTrail, { width: '50rem', autoAlpha: 0.8, duration: 2, delay: 0 });
     window.onpointermove = (event) => {
       const { clientX, clientY } = event;
 
