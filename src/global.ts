@@ -25,8 +25,8 @@ window.Webflow.push(() => {
     window.addEventListener('mousemove', (e) => {
       gsap.to(mouseTrail, {
         duration: 4,
-        x: e.pageX - mouseTrail.clientWidth / 2,
-        y: e.pageY - mouseTrail.clientHeight / 2,
+        x: e.clientX - mouseTrail.clientWidth / 2,
+        y: e.clientY - mouseTrail.clientHeight / 2,
         ease: 'back.out',
       });
     });
@@ -42,6 +42,7 @@ window.Webflow.push(() => {
   const delayTime = 500; // .5 second
   const mainWrapper = document.querySelector('.main-wrapper');
 
+  // Fade In main-wrapper on page load
   gsap.to(mainWrapper, { autoAlpha: 1, delay: 0.25, duration: 2 });
 
   // Function to handle page transitions
