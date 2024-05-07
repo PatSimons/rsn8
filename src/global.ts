@@ -44,13 +44,20 @@ window.Webflow.push(() => {
       //_______________________________________________________________________________________________________ Mouse Trail
       const mouseTrail = document.querySelector<HTMLElement>('[cs-el="mouseTrail"]');
       if (mouseTrail && isDesktop) {
-        gsap.to(mouseTrail, { autoAlpha: 0.9, duration: 2, delay: 0 });
+        gsap.to(mouseTrail, { autoAlpha: 0.8, duration: 2, delay: 0 });
         function initMouseTrail() {
           gsap.to(mouseTrail, {
             rotation: 360, // Rotate the element by 360 degrees
-            duration: 6, // Duration of the rotation animation
+            duration: 4, // Duration of the rotation animation
             ease: 'none', // Linear ease for a constant speed rotation
             repeat: -1, // Repeat the animation infinitely
+          });
+          gsap.to(mouseTrail, {
+            scale: 0.4, // Rotate the element by 360 degrees
+            duration: 5, // Duration of the rotation animation
+            ease: 'none', // Linear ease for a constant speed rotation
+            repeat: -1, // Repeat the animation infinitely
+            yoyo: true,
           });
           window.addEventListener('mousemove', (e) => {
             gsap.to(mouseTrail, {
