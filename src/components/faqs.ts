@@ -9,6 +9,8 @@
 */
 
 import { gsap } from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+gsap.registerPlugin(ScrollToPlugin);
 
 // Export Initialize FAQs
 export function initFaqs() {
@@ -34,19 +36,35 @@ export function initFaqs() {
 
       (faq as any)._accordionAnimation = tl_openFaq;
 
-      faq?.addEventListener('click', () => {
+      faq?.addEventListener('click', (el) => {
+        // Check if there is a currently active item
         if (currentItem !== null) {
+          // Toggle the 'active' class of the currently active FAQ item
           faqs[currentItem].classList.toggle('active');
+
+          // Check if the clicked FAQ item is the same as the currently active one
           if (currentItem === i) {
+            // If yes, reset the currentItem and reverse the timeline animation
             currentItem = null;
             return tl_openFaq.timeScale(1).reverse();
           }
+
+          // If not, reverse the animation of the currently active FAQ item
           (faqs[currentItem] as any)._accordionAnimation.reverse();
         }
+        // ScrollTo
+        // gsap.to(window, { duration: 1, scrollTo: { y: el.target, offsetY: 256, autoKill: false } });
+
+        // Toggle the 'active' class of the clicked FAQ item
         faq.classList.toggle('active');
+
+        // Play the timeline animation to open the FAQ
         tl_openFaq.timeScale(1).play();
+
+        // Set the clicked FAQ item as the currently active one
         currentItem = i;
       });
+
       // const faqAnswer = faq.querySelector<HTMLElement>('[cs-el="faq-answer"]');
       // const faqIcon = faq.querySelector<HTMLElement>('[cs-el="faq-icon"]');
       // const hover = gsap.timeline({ paused: true });

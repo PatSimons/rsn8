@@ -7782,154 +7782,202 @@
   gsapWithCSS.registerPlugin(ScrollTrigger2);
   window.Webflow ||= [];
   window.Webflow.push(() => {
-    const mouseTrail = document.querySelector('[cs-el="mouseTrail"]');
-    if (mouseTrail) {
-      gsapWithCSS.to(mouseTrail, {
-        rotation: 360,
-        // Rotate the element by 360 degrees
-        duration: 6,
-        // Duration of the rotation animation
-        ease: "none",
-        // Linear ease for a constant speed rotation
-        repeat: -1
-        // Repeat the animation infinitely
-      });
-      gsapWithCSS.to(mouseTrail, { autoAlpha: 0.9, duration: 2, delay: 0 });
-      window.addEventListener("mousemove", (e) => {
-        gsapWithCSS.to(mouseTrail, {
-          duration: 4,
-          x: e.clientX - mouseTrail.clientWidth / 2,
-          y: e.clientY - mouseTrail.clientHeight / 2,
-          ease: "back.out"
-        });
-      });
-    }
-    initSliders();
-    const delayTime = 500;
-    const mainWrapper = document.querySelector(".main-wrapper");
-    gsapWithCSS.to(mainWrapper, { autoAlpha: 1, delay: 0.25, duration: 2 });
-    function handlePageTransition(event) {
-      event.preventDefault();
-      gsapWithCSS.to(mainWrapper, { opacity: 0, duration: 0.5 });
-      gsapWithCSS.to(mouseTrail, { opacity: 0, duration: 0.5 });
-      const url = event.currentTarget.href;
-      setTimeout(() => {
-        window.location.href = url;
-      }, delayTime);
-    }
-    document.querySelectorAll("a").forEach((link) => {
-      if (!link.getAttribute("href")?.startsWith("#")) {
-        link.addEventListener("click", handlePageTransition);
-      }
-    });
-    const heroFooter = document.querySelector('[cs-el="heroFooter"]');
-    if (heroFooter) {
-      gsapWithCSS.to(heroFooter, { autoAlpha: 1, delay: 2 });
-      gsapWithCSS.to(heroFooter, {
-        opacity: 0,
-        scrollTrigger: {
-          trigger: heroFooter,
-          start: "top 85%",
-          end: "top 75%",
-          scrub: 1,
-          markers: false
-        }
-      });
-    }
-    const fadeIns = document.querySelectorAll('[cs-tr="fadeIn"]');
-    if (fadeIns.length > 0) {
-      fadeIns.forEach((fadeIn) => {
-        gsapWithCSS.from(fadeIn, { opacity: 0 });
-      });
-    }
-    const splitTypes = gsapWithCSS.utils.toArray('[cs-el="splitText-w"]');
-    if (splitTypes.length > 0) {
-      gsapWithCSS.from(splitTypes, {
-        autoAlpha: 0,
-        y: "1rem",
-        duration: 1,
-        ease: "power1.out"
-      });
-      if (splitTypes.length > 0) {
-        splitTypes.forEach((el) => {
-          const splitType = new SplitType(el, { types: "words" });
-          gsapWithCSS.from(splitType.words, {
-            opacity: 0,
-            y: "-1rem",
-            duration: 4,
-            scale: 1.1,
-            ease: "back.out",
-            stagger: 0.4
-          });
-          gsapWithCSS.fromTo(
-            el,
-            {
-              opacity: 1,
-              yPercent: 0,
-              scale: 1
-            },
-            {
-              opacity: 0,
-              scale: 1.1,
-              yPercent: -10,
-              //stagger: 0.05,
-              ease: "linear",
-              scrollTrigger: {
-                trigger: el,
-                start: "top 40%",
-                end: "top -30%",
-                scrub: 1,
-                markers: false
-              }
+    const mm = gsapWithCSS.matchMedia(), breakPoint = 800;
+    mm.add(
+      {
+        isDesktop: `(min-width: ${breakPoint}px)`,
+        isMobile: `(max-width: ${breakPoint - 1}px)`
+      },
+      (context3) => {
+        const navOpen = document.querySelector('[cs-el="navOpen"]');
+        const navMenu = document.querySelector('[cs-el="navMenu"]');
+        const navItems = document.querySelectorAll('[cs-el="navItem"]');
+        if (navMenu && navOpen) {
+          navOpen.addEventListener("click", () => {
+            if (!navMenu.classList.contains("is-open")) {
+              navMenu.classList.add("is-open");
+            } else {
+              navMenu.classList.remove("is-open");
             }
-          );
-        });
-      }
-    }
-    const sessionCards = gsapWithCSS.utils.toArray('[cs-el="sessionCard"]');
-    if (sessionCards.length > 0) {
-      sessionCards.forEach((card) => {
-        const sessionBG = card.querySelector('[cs-el="sessionBg"]');
-        const sessionInfo = card.querySelector('[cs-el="sessionSummary"]');
-        const tl_cardHover = gsapWithCSS.timeline({ paused: true });
-        tl_cardHover.to(card, {
-          scale: 1.04,
-          duration: 1,
-          ease: "sin.out"
-          //backgroundColor: '#ffffff',
-        });
-        tl_cardHover.to(sessionBG, { opacity: 1, duration: 1, ease: "sin.out" }, "<");
-        tl_cardHover.to(sessionInfo, { opacity: 1, duration: 1, ease: "sin.out" }, "<");
-        card.addEventListener("mouseenter", () => {
-          tl_cardHover.timeScale(1).play();
-        });
-        card.addEventListener("mouseleave", () => {
-          tl_cardHover.timeScale(2).reverse();
-        });
-      });
-    }
-    const mint = "#bae5d0";
-    const pink = "#e3ccce";
-    const blue = "#acd5ea";
-    const colorArray = [mint, pink, blue];
-    const animatedGradientBackgroundElms = gsapWithCSS.utils.toArray('[cs-el="resonateGradient"]');
-    if (animatedGradientBackgroundElms.length > 0) {
-      animatedGradientBackgroundElms.forEach((el) => {
-        let currentColorIndex = 0;
-        function changeGradientColor() {
-          currentColorIndex = (currentColorIndex + 1) % colorArray.length;
-          const color1 = colorArray[currentColorIndex];
-          const color2 = colorArray[(currentColorIndex + 1) % colorArray.length];
-          const color3 = colorArray[(currentColorIndex + 2) % colorArray.length];
-          gsapWithCSS.to(el, {
-            duration: 2,
-            // Adjust the duration as needed
-            background: `linear-gradient(45deg, ${color1}, ${color2}, ${color3})`,
-            onComplete: changeGradientColor
           });
         }
-      });
-    }
+        const { isDesktop, isMobile } = context3.conditions;
+        const mouseTrail = document.querySelector('[cs-el="mouseTrail"]');
+        if (mouseTrail && isDesktop) {
+          let initMouseTrail2 = function() {
+            gsapWithCSS.to(mouseTrail, {
+              rotation: 360,
+              // Rotate the element by 360 degrees
+              duration: 6,
+              // Duration of the rotation animation
+              ease: "none",
+              // Linear ease for a constant speed rotation
+              repeat: -1
+              // Repeat the animation infinitely
+            });
+            window.addEventListener("mousemove", (e) => {
+              gsapWithCSS.to(mouseTrail, {
+                duration: 4,
+                x: e.clientX - mouseTrail.clientWidth / 2,
+                y: e.clientY - mouseTrail.clientHeight / 2,
+                ease: "back.out"
+              });
+            });
+          };
+          var initMouseTrail = initMouseTrail2;
+          gsapWithCSS.to(mouseTrail, { autoAlpha: 0.9, duration: 2, delay: 0 });
+          initMouseTrail2();
+        } else if (mouseTrail && isMobile) {
+          let moveRandomly2 = function() {
+            gsapWithCSS.to(mouseTrail, {
+              x: () => gsapWithCSS.utils.random(0, window.innerWidth - mouseTrail.offsetWidth),
+              y: () => gsapWithCSS.utils.random(0, window.innerHeight - mouseTrail.offsetHeight),
+              duration: 3,
+              // Duration of the animation
+              ease: "power2.inOut",
+              onComplete: moveRandomly2
+              // Repeat the animation when completed
+            });
+          };
+          var moveRandomly = moveRandomly2;
+          gsapWithCSS.to(mouseTrail, { autoAlpha: 0.9, duration: 2, delay: 0 });
+        }
+        initSliders();
+        const delayTime = 500;
+        const mainWrapper = document.querySelector(".main-wrapper");
+        gsapWithCSS.to(mainWrapper, { autoAlpha: 1, delay: 0.25, duration: 2 });
+        function handlePageTransition(event) {
+          event.preventDefault();
+          gsapWithCSS.to(mainWrapper, { opacity: 0, duration: 0.5 });
+          gsapWithCSS.to(mouseTrail, { opacity: 0, duration: 0.5 });
+          const url = event.currentTarget.href;
+          setTimeout(() => {
+            window.location.href = url;
+          }, delayTime);
+        }
+        document.querySelectorAll("a").forEach((link) => {
+          if (!link.getAttribute("href")?.startsWith("#")) {
+            link.addEventListener("click", handlePageTransition);
+          }
+        });
+        const heroFooter = document.querySelector('[cs-el="heroFooter"]');
+        if (heroFooter) {
+          gsapWithCSS.to(heroFooter, { autoAlpha: 1, delay: 2 });
+          gsapWithCSS.to(heroFooter, {
+            opacity: 0,
+            scrollTrigger: {
+              trigger: heroFooter,
+              start: "top 85%",
+              end: "top 75%",
+              scrub: 1,
+              markers: false
+            }
+          });
+        }
+        const fadeIns = document.querySelectorAll('[cs-tr="fadeIn"]');
+        if (fadeIns.length > 0) {
+          fadeIns.forEach((fadeIn) => {
+            gsapWithCSS.from(fadeIn, { opacity: 0 });
+          });
+        }
+        const splitTypes = gsapWithCSS.utils.toArray('[cs-el="splitText-w"]');
+        if (splitTypes.length > 0) {
+          gsapWithCSS.from(splitTypes, {
+            autoAlpha: 0,
+            y: "1rem",
+            duration: 1,
+            ease: "power1.out"
+          });
+          if (splitTypes.length > 0) {
+            splitTypes.forEach((el) => {
+              const splitType = new SplitType(el, { types: "words" });
+              gsapWithCSS.from(splitType.words, {
+                opacity: 0,
+                y: "-1rem",
+                duration: 4,
+                scale: 1.1,
+                ease: "back.out",
+                stagger: 0.4
+              });
+              gsapWithCSS.fromTo(
+                el,
+                {
+                  opacity: 1,
+                  yPercent: 0,
+                  scale: 1
+                },
+                {
+                  opacity: 0,
+                  scale: 1.1,
+                  yPercent: -10,
+                  //stagger: 0.05,
+                  ease: "linear",
+                  scrollTrigger: {
+                    trigger: el,
+                    start: "top 40%",
+                    end: "top -30%",
+                    scrub: 1,
+                    markers: false
+                  }
+                }
+              );
+            });
+          }
+        }
+        const sessionCards = gsapWithCSS.utils.toArray('[cs-el="sessionCard"]');
+        if (sessionCards.length > 0) {
+          sessionCards.forEach((card) => {
+            const sessionBG = card.querySelector('[cs-el="sessionBg"]');
+            const sessionInfo = card.querySelector('[cs-el="sessionSummary"]');
+            const tl_cardHover = gsapWithCSS.timeline({ paused: true });
+            tl_cardHover.to(card, {
+              scale: 1.04,
+              duration: 1,
+              ease: "sin.out"
+              //backgroundColor: '#ffffff',
+            });
+            tl_cardHover.to(sessionBG, { opacity: 1, duration: 1, ease: "sin.out" }, "<");
+            tl_cardHover.to(sessionInfo, { opacity: 1, duration: 1, ease: "sin.out" }, "<");
+            card.addEventListener("mouseenter", () => {
+              tl_cardHover.timeScale(1).play();
+            });
+            card.addEventListener("mouseleave", () => {
+              tl_cardHover.timeScale(2).reverse();
+            });
+          });
+        }
+        const mint = "#bae5d0";
+        const pink = "#e3ccce";
+        const blue = "#acd5ea";
+        const colorArray = [mint, pink, blue];
+        const animatedGradientBackgroundElms = gsapWithCSS.utils.toArray('[cs-el="resonateGradient"]');
+        if (animatedGradientBackgroundElms.length > 0) {
+          animatedGradientBackgroundElms.forEach((el) => {
+            let currentColorIndex = 0;
+            function changeGradientColor() {
+              currentColorIndex = (currentColorIndex + 1) % colorArray.length;
+              const color1 = colorArray[currentColorIndex];
+              const color2 = colorArray[(currentColorIndex + 1) % colorArray.length];
+              const color3 = colorArray[(currentColorIndex + 2) % colorArray.length];
+              gsapWithCSS.to(el, {
+                duration: 2,
+                // Adjust the duration as needed
+                background: `linear-gradient(45deg, ${color1}, ${color2}, ${color3})`,
+                onComplete: changeGradientColor
+              });
+            }
+          });
+        }
+        if (isDesktop) {
+          gsapWithCSS.to(".box", { backgroundColor: "blue" });
+        } else if (isMobile) {
+          gsapWithCSS.to(".box", { backgroundColor: "red" });
+        }
+        return () => {
+        };
+      }
+      // Close (context)
+    );
   });
 })();
 /*! Bundled license information:
