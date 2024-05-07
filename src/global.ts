@@ -43,22 +43,24 @@ window.Webflow.push(() => {
       const { isDesktop, isMobile } = context.conditions;
       //_______________________________________________________________________________________________________ Mouse Trail
       const mouseTrail = document.querySelector<HTMLElement>('[cs-el="mouseTrail"]');
+      if (mouseTrail) {
+        gsap.to(mouseTrail, {
+          rotation: 360, // Rotate the element by 360 degrees
+          duration: 4, // Duration of the rotation animation
+          ease: 'none', // Linear ease for a constant speed rotation
+          repeat: -1, // Repeat the animation infinitely
+        });
+        gsap.to(mouseTrail, {
+          scale: 0.4, // Rotate the element by 360 degrees
+          duration: 5, // Duration of the rotation animation
+          ease: 'none', // Linear ease for a constant speed rotation
+          repeat: -1, // Repeat the animation infinitely
+          yoyo: true,
+        });
+      }
       if (mouseTrail && isDesktop) {
         gsap.to(mouseTrail, { autoAlpha: 0.8, duration: 2, delay: 0 });
         function initMouseTrail() {
-          gsap.to(mouseTrail, {
-            rotation: 360, // Rotate the element by 360 degrees
-            duration: 4, // Duration of the rotation animation
-            ease: 'none', // Linear ease for a constant speed rotation
-            repeat: -1, // Repeat the animation infinitely
-          });
-          gsap.to(mouseTrail, {
-            scale: 0.4, // Rotate the element by 360 degrees
-            duration: 5, // Duration of the rotation animation
-            ease: 'none', // Linear ease for a constant speed rotation
-            repeat: -1, // Repeat the animation infinitely
-            yoyo: true,
-          });
           window.addEventListener('mousemove', (e) => {
             gsap.to(mouseTrail, {
               duration: 4,
@@ -72,15 +74,15 @@ window.Webflow.push(() => {
       } else if (mouseTrail && isMobile) {
         gsap.to(mouseTrail, { autoAlpha: 0.9, duration: 2, delay: 0 });
 
-        function moveRandomly() {
-          gsap.to(mouseTrail, {
-            x: () => gsap.utils.random(0, window.innerWidth - mouseTrail.offsetWidth),
-            y: () => gsap.utils.random(0, window.innerHeight - mouseTrail.offsetHeight),
-            duration: 3, // Duration of the animation
-            ease: 'power2.inOut',
-            onComplete: moveRandomly, // Repeat the animation when completed
-          });
-        }
+        // function moveRandomly() {
+        //   gsap.to(mouseTrail, {
+        //     x: () => gsap.utils.random(0, window.innerWidth - mouseTrail.offsetWidth),
+        //     y: () => gsap.utils.random(0, window.innerHeight - mouseTrail.offsetHeight),
+        //     duration: 3, // Duration of the animation
+        //     ease: 'power2.inOut',
+        //     onComplete: moveRandomly, // Repeat the animation when completed
+        //   });
+        // }
         //moveRandomly();
       }
 
